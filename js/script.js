@@ -11,7 +11,7 @@ document.querySelector('#title').addEventListener('change', (e) => {
 	}
 });
 
-document.querySelector('#color').style.display = 'none';
+document.querySelector('#shirt-colors').style.display = 'none';
 document.querySelector('#design').addEventListener('change', e => changeColorOptions(e.target.value));
 
 document.querySelector('#activities').addEventListener('change', e => {
@@ -183,11 +183,13 @@ function formError(element, error){
 		element.classList.add('error');
 		element.parentNode.lastElementChild.style.display = 'block';
 		element.parentNode.lastElementChild.classList.add('not-valid');
-		element.parentNode.lastElementChild.classList.remove('valid');
+		element.parentNode.classList.remove('valid');
 	} else {
 		element.classList.remove('error');
 		element.parentNode.lastElementChild.style.display = null;
-		element.parentNode.lastElementChild.classList.add('valid');
+		console.log(element.parentNode);
+		if(!element.parentNode.classList.contains('activities'))
+			element.parentNode.classList.add('valid');
 		element.parentNode.lastElementChild.classList.remove('not-valid');
 	}
 }
@@ -247,5 +249,5 @@ function changeColorOptions(design) {
 			option.style.display = 'none';
 		}
 	});
-	document.querySelector('#color').style.display = null;
+	document.querySelector('#shirt-colors').style.display = null;
 }
