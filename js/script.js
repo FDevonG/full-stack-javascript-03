@@ -183,13 +183,14 @@ function formError(element, error){
 		element.classList.add('error');
 		element.parentNode.lastElementChild.style.display = 'block';
 		element.parentNode.lastElementChild.classList.add('not-valid');
-		element.parentNode.classList.remove('valid');
+		if(!element.parentNode.classList.contains('activities'))
+			element.parentNode.classList.remove('valid');
 	} else {
 		element.classList.remove('error');
 		element.parentNode.lastElementChild.style.display = null;
 		console.log(element.parentNode);
 		if(!element.parentNode.classList.contains('activities'))
-			element.parentNode.classList.add('valid');
+			element.parentNode.classList.add('valid');;
 		element.parentNode.lastElementChild.classList.remove('not-valid');
 	}
 }
