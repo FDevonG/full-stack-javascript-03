@@ -11,17 +11,27 @@ document.querySelector('#title').addEventListener('change', (e) => {
 	}
 });
 
-document.querySelector('#shirt-colors').style.display = 'none';
+document.querySelector('#color').disabled = true;
 document.querySelector('#design').addEventListener('change', e => changeColorOptions(e.target.value));
 
 document.querySelector('#activities').addEventListener('change', e => {
 	updatePriceText(e.target.getAttribute('data-cost'), e.target.checked);
 	courseTimeCheck(e);
+	activitiesErrorHandling();
 });
 
 document.querySelector('#paypal').style.display = 'none';
 document.querySelector('#bitcoin').style.display = 'none';
 document.querySelector('#payment').value = 'credit-card';
+
+document.querySelector('#credit-card').addEventListener('change', e => {
+	if(e.target.getAttribute('id') === 'exp-month'){
+		checkCardDate();
+	}
+	if(e.target.getAttribute('id') === 'exp-year'){
+		checkCardYear();
+	}
+});
 
 document.querySelector('form').addEventListener('input', e => {
 	if(e.target.getAttribute('id') === 'name'){
@@ -98,8 +108,10 @@ function checkFormSubmit(){
 		const ccNum = checkCardNumber();
 		const ccZip = checkCardZip();
 		const ccCVV = checkCardCVV();
+		const ccDate = checkCardDate();
+		const ccYear = checkCardYear();
 		
-		if(name && email && ccNum && ccZip && ccCVV && totalActivityCost > 0){
+		if(name && email && ccNum && ccZip && ccCVV && ccDate && ccYear && totalActivityCost > 0){
 			return true;
 		} else {
 			return false;
@@ -165,6 +177,55 @@ function checkCardCVV(){
 }
 
 /**
+ * checks the card date expiration to see if one has been selected
+ * 
+ * @returns {Boolean} returns true if a value is selected and false if not
+ */
+function checkCardDate(){
+	const cardDate = document.querySelector('#exp-month');
+	if(cardDate.value.toLowerCase() === 'select date'){
+		formError(cardDate, false);
+		return false;
+	} else {
+		formError(cardDate, true);
+		return true;
+	}
+}
+
+/**
+ * checks the card year expiration to see if one has been selected
+ * 
+ * @returns {Boolean} returns true if a value is selected and false if not
+ */
+function checkCardYear(){
+	const cardYear = document.querySelector('#exp-year');
+	if(cardYear.value.toLowerCase() === 'select year'){
+		formError(cardYear, false);
+		return false;
+	} else {
+		formError(cardYear, true);
+		return true;
+	}
+}
+
+/**
+ * This is run when the activities section changes and determines if we have something selected or not
+ */
+function activitiesErrorHandling(){
+	const activivties = document.querySelector('#activities');
+	let selected = false;
+	const inputs = activivties.querySelectorAll('input');
+	for(let i = 0; i < inputs.length; i++){
+		if(inputs[i].checked){
+			selected = true;
+			break;
+		}
+	}
+	formError(activivties, selected);
+}
+
+
+/**
  * Handles applying and removing the errors
  * @method
  * @param {object} element - the element to be used
@@ -180,17 +241,43 @@ function formError(element, error){
 			element.parentNode.lastElementChild.textContent = `${element.parentNode.textContent.trim().slice(0, -3)} is required *`;
 		}
 		
-		element.classList.add('error');
-		element.parentNode.lastElementChild.style.display = 'block';
-		element.parentNode.lastElementChild.classList.add('not-valid');
-		element.parentNode.classList.remove('valid');
+		if(element.tagName === 'SELECT'){
+			element.parentNode.classList.add('error');
+			element.parentNode.classList.add('not-valid');
+			element.parentNode.classList.remove('valid');
+			element.parentNode.lastElementChild.style.display = 'block';
+		} else if (element.tagName === 'FIELDSET'){
+			element.classList.add('error');
+			element.classList.add('not-valid');
+			element.classList.remove('valid');
+			element.lastElementChild.style.display = 'block';
+		} else {
+			element.classList.add('error');
+			element.parentNode.lastElementChild.classList.add('not-valid');
+			element.parentNode.classList.remove('valid');
+			element.parentNode.lastElementChild.style.display = 'block';
+		}
+
+		
 	} else {
-		element.classList.remove('error');
-		element.parentNode.lastElementChild.style.display = null;
-		console.log(element.parentNode);
-		if(!element.parentNode.classList.contains('activities'))
+
+		if(element.tagName === 'SELECT'){
+			element.parentNode.classList.remove('error');
+			element.parentNode.classList.remove('not-valid');
 			element.parentNode.classList.add('valid');
-		element.parentNode.lastElementChild.classList.remove('not-valid');
+			element.parentNode.lastElementChild.style.display = null;
+		} else if (element.tagName === 'FIELDSET'){
+			element.classList.remove('error');
+			element.classList.remove('not-valid');
+			element.classList.add('valid');
+			element.lastElementChild.style.display = null;
+		} else {
+			element.classList.remove('error');
+			element.parentNode.lastElementChild.classList.remove('not-valid');
+			element.parentNode.classList.add('valid');
+			element.parentNode.lastElementChild.style.display = null;
+		}
+		
 	}
 }
 
@@ -249,5 +336,5 @@ function changeColorOptions(design) {
 			option.style.display = 'none';
 		}
 	});
-	document.querySelector('#shirt-colors').style.display = null;
+	document.querySelector('#color').disabled = false;
 }
