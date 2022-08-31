@@ -241,7 +241,6 @@ function formError(element, error){
 			element.parentNode.lastElementChild.textContent = `${element.parentNode.textContent.trim().slice(0, -3)} is required *`;
 		}
 		
-<<<<<<< HEAD
 		if(element.tagName === 'SELECT'){
 			element.parentNode.classList.add('error');
 			element.parentNode.classList.add('not-valid');
@@ -279,20 +278,6 @@ function formError(element, error){
 			element.parentNode.lastElementChild.style.display = null;
 		}
 		
-=======
-		element.classList.add('error');
-		element.parentNode.lastElementChild.style.display = 'block';
-		element.parentNode.lastElementChild.classList.add('not-valid');
-		if(!element.parentNode.classList.contains('activities'))
-			element.parentNode.classList.remove('valid');
-	} else {
-		element.classList.remove('error');
-		element.parentNode.lastElementChild.style.display = null;
-		console.log(element.parentNode);
-		if(!element.parentNode.classList.contains('activities'))
-			element.parentNode.classList.add('valid');;
-		element.parentNode.lastElementChild.classList.remove('not-valid');
->>>>>>> 9f45f5bf0905f2dc4a1343d272ffe806f30b9777
 	}
 }
 
